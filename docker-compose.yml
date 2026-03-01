@@ -1,0 +1,94 @@
+services:
+  workflow-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      OLLAMA_MATH_URL: http://ollama-gpu:11434
+      OLLAMA_VIET_URL: http://ollama-viet:11434
+      CHROMADB_URL: http://chromadb:8000
+      CHROMA_COLLECTION: math_tutor_knowledge
+      MODEL_MATH: qwen2.5-coder:7b-instruct
+      MODEL_VIET: sailor2:1b-iq4_nl
+      TOP_K: "3"
+      REQUEST_TIMEOUT: "25"
+      SIMILARITY_THRESHOLD: "0.35"
+      CONTEXT_CHAR_LIMIT: "2200"
+      REDIS_URL: redis://redis:6379/0
+      CACHE_TTL: "1800"
+      SEMANTIC_THRESHOLD: "0.92"
+      SANDBOX_TIMEOUT: "2"
+      SANDBOX_MEMORY_MB: "128"
+      ENABLE_SELF_CORRECTION: "true"
+      CODE_SIZE_LIMIT: "6000"
+      MAX_REASONING_TOKENS_CAP: "1200"
+    depends_on:
+      - chromadb
+      - ollama-gpu
+      - ollama-viet
+      - redis
+    mem_limit: 2g
+    pids_limit: 256
+    networks:
+      - internal
+
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - internal
+
+  chromadb:
+    image: chromadb/chroma:latest
+    restart: unless-stopped
+    volumes:
+      - chroma-data:/chroma/chroma
+    networks:
+      - internal
+
+  ollama-gpu:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    volumes:
+      - ollama-gpu-data:/root/.ollama
+    networks:
+      - internal
+
+  ollama-viet:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    volumes:
+      - ollama-viet-data:/root/.ollama
+    networks:
+      - internal
+
+  nginx:
+    image: nginx:1.27-alpine
+    depends_on:
+      - workflow-api
+    ports:
+      - "80:80"
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  chroma-data:
+  ollama-gpu-data:
+  ollama-viet-data:
