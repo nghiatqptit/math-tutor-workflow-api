@@ -1,0 +1,14 @@
+version: 1
+project: math-tutor-workflow-api
+purpose: Copilot workflow knowledge base for implementation and review
+artifacts:
+  research: .ai/research
+  plans: .ai/plans
+  reviews: .ai/reviews
+  tickets: .ai/tickets
+  tests: .ai/tests
+  system: .ai/system
+  domains: .ai/domains
+  services: .ai/services
+  flows: .ai/flows
+  indexes: .ai/indexes
