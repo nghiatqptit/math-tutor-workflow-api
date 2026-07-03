@@ -15,6 +15,14 @@ Invocation: `/research-agent`
 
 Find the exact code path, configuration, or documentation that controls the requested behavior.
 
+## Input
+
+- Jira ticket
+- User chat prompt
+- Business requirement
+- Bug report
+- Feature request
+
 ## Constraints
 
 - Do not edit files.

@@ -20,6 +20,7 @@ Use this flow for feature work, refactors, and larger bug fixes.
 
 - Understand the problem precisely
 - Collect assumptions, missing information, and constraints
+- Accept input from either a Jira ticket or a user chat prompt
 - No code
 
 ### Planning
@@ -30,8 +31,9 @@ Use this flow for feature work, refactors, and larger bug fixes.
 
 ### Human Approval
 
-- User selects the option or requests revision
-- If not approved, return to Planning
+- User must select one of: `Approved`, `Revise`, or `Rejected`
+- If there is no user choice yet, stop here and wait
+- If not approved, do not continue to Jira or implementation; return to Planning only after the user provides a new choice
 
 ### Jira
 
@@ -46,7 +48,9 @@ Use this flow for feature work, refactors, and larger bug fixes.
 ### Discovery Agent
 
 - Build or refresh the knowledge base under `.ai/`
-- Update maps and indexes when missing or stale
+- Compare the codebase against the previous indexed commit
+- Update only the maps and indexes affected by changed files
+- Write the new indexed commit back to `.ai/project-manifest.yaml`
 
 ### Implementation Agent
 

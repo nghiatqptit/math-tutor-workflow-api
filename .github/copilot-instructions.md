@@ -67,6 +67,13 @@ Use this sequence for feature work, refactors, and larger fixes:
 8. Testing Agent
 9. Documentation Agent
 
+## Workflow Guide
+
+- Open [dev-workflow.md](./workflows/dev-workflow.md) to follow the phase order.
+- Open [workflow-guide.md](./workflows/workflow-guide.md) for the short usage instructions.
+- Use `/research-agent`, `/planner-agent`, and `/architecture-review-agent` before implementation when the request is unclear or risky.
+- Stop at Human Approval until the user explicitly chooses `Approved`, `Revise`, or `Rejected`.
+
 ## Workflow Artifacts
 
 - Research output goes to `.ai/research/<feature-name>.md`
